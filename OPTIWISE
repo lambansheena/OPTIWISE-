@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OptiWise - Think Choose Grow</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app-container">
+    
+    <!-- Header / Level Section -->
+    <header class="header-card">
+      <div class="level-badge-row">
+        <div class="status-indicator green"></div>
+        <span class="level-tag">LEVEL 1</span>
+        <h2 class="level-title">SEE THE OPPORTUNITY</h2>
+      </div>
+      <p class="level-subtitle">Spot chances others miss. Look beyond what's right in front of...</p>
+      
+      <!-- Progress Bar -->
+      <div class="progress-row">
+        <span class="round-label">Round <span id="current-round">1</span>/5</span>
+        <div class="dots-container">
+          <span class="dot active">1</span>
+          <span class="dot">2</span>
+          <span class="dot">3</span>
+          <span class="dot">4</span>
+          <span class="dot">5</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Game Card -->
+    <main class="game-card">
+      
+      <!-- Context Tags -->
+      <div class="tags-container">
+        <div class="tag pill-tag">
+          <span class="icon">🧭</span>
+          <span id="scenario-context">Campus Morning Rush</span>
+          <span class="divider">•</span>
+          <span>Budget: <span id="user-budget">₱300</span></span>
+        </div>
+        <div class="tag quote-tag">
+          <span class="icon">🎨</span>
+          <span id="scenario-hint">"What's the winning student move here?"</span>
+        </div>
+      </div>
+
+      <!-- Question Text -->
+      <h1 class="question-text" id="question-text">
+        Students always rush late and skip breakfast. Canteen lines are too long. You have ₱300. What do you do?
+      </h1>
+
+      <!-- Choices Container (Hints Removed) -->
+      <div class="choices-list" id="choices-container">
+        <!-- JS will populate options dynamically here -->
+      </div>
+
+    </main>
+
+    <!-- Footer Stats -->
+    <footer class="footer-bar">
+      <div class="footer-item">📚 Level Select & Mode</div>
+      <div class="footer-item">Progress: <span id="global-progress">1 of 25 Rounds</span></div>
+      <div class="footer-item">📖 Wisdom Codex</div>
+    </footer>
+
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
