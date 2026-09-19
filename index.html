@@ -39,13 +39,33 @@
     let currentScenarioIndex=0,selectedOptionIndex=null,userScores={};
     const $=id=>document.getElementById(id),welcome=$('screen-welcome'),game=$('screen-game'),results=$('screen-results');
     const resetScores=()=>{userScores={};researchData.forEach(s=>userScores[s.dimension]=0)};
-    function loadScenario(index){const data=researchData[index];selectedOptionIndex=null;$('progress-text').textContent=`CHALLENGE ${String(index+1).padStart(2,'0')} / ${String(researchData.length).padStart(2,'0')}`;$('progress-bar').style.width=`${((index+1)/researchData.length)*100}%`;$('dimension-badge').textContent=data.dimension;$('scenario-category').textContent=data.category;$('scenario-title').textContent=data.title;$('scenario-desc').textContent=data.description;$('scenario-question').textContent=data.question;$('feedback-panel').classList.add('hidden');const submit=$('btn-submit');submit.disabled=true;submit.className='w-full py-3.5 rounded-xl bg-slate-300 text-slate-500 font-display font-bold text-base transition-all flex items-center justify-center gap-2 cursor-not-allowed';const container=$('choices-container');container.innerHTML='';data.options.forEach((option,i)=>{const button=document.createElement('button');button.type='button';button.className='choice-card w-full text-left p-4 rounded-xl bg-white border border-slate-200 shadow-sm flex items-start gap-3';button.innerHTML=`<span class="choice-marker shrink-0 w-7 h-7 rounded-full border-2 border-slate-300 flex items-center justify-center text-xs font-bold text-slate-500">${String.fromCharCode(65+i)}</span><span class="text-sm sm:text-base leading-relaxed text-slate-700">${option.text}</span>`;button.addEventListener('click',()=>selectOption(i));container.appendChild(button)})}
-    function selectOption(index){selectedOptionIndex=index;document.querySelectorAll('.choice-card').forEach((card,i)=>{card.classList.toggle('selected',i===index);const marker=card.querySelector('.choice-marker');marker.classList.toggle('bg-brand-600',i===index);marker.classList.toggle('text-white',i===index);marker.classList.toggle('border-brand-600',i===index)});const submit=$('btn-submit');submit.disabled=false;submit.className='w-full py-3.5 rounded-xl bg-brand-600 hover:bg-brand-700 text-white font-display font-bold text-base shadow-md transition-all active:scale-[.98] flex items-center justify-center gap-2'}
-    $('btn-start').addEventListener('click',()=>{resetScores();welcome.classList.add('hidden');game.classList.remove('hidden');loadScenario(0);window.scrollTo({top:0,behavior:'smooth'})});
+    function loadScenario(index){
+      const data=researchData[index];
+      selectedOptionIndex=null;
+      $('progress-text').textContent=`CHALLENGE ${String(index+1).padStart(2,'0')} / ${String(researchData.length).padStart(2,'0')}`;
+      $('progress-bar').style.width=`${((index+1)/researchData.length)*100}%`;
+      $('dimension-badge').textContent=data.dimension;
+      $('scenario-category').textContent=data.category;
+      $('scenario-title').textContent=data.title;
+      $('scenario-desc').textContent=data.description;
+      $('scenario-question').textContent=data.question;
+      $('feedback-panel').classList.add('hidden');
+      const submit=$('btn-submit');
+      submit.classList.remove('hidden');
+      submit.disabled=true;
+      submit.className='w-full py-3.5 rounded-xl bg-slate-300 text-slate-500 font-display font-bold text-base transition-all flex items-center justify-center gap-2 cursor-not-allowed';
+      document.querySelectorAll('.choice-card').forEach(card=>{card.disabled=false;card.classList.remove('selected');const marker=card.querySelector('.choice-marker');marker.classList.remove('bg-brand-600','text-white','border-brand-600');marker.classList.add('border-slate-300','text-slate-500');});
+      const container=$('choices-container');
+      container.innerHTML='';
+      data.options.forEach((option,i)=>{const button=document.createElement('button');button.type='button';button.className='choice-card w-full text-left p-4 rounded-xl bg-white border border-slate-200 shadow-sm flex items-start gap-3';button.innerHTML=`<span class="choice-marker shrink-0 w-7 h-7 rounded-full border-2 border-slate-300 flex items-center justify-center text-xs font-bold text-slate-500">${String.fromCharCode(65+i)}</span><span class="text-sm sm:text-base leading-relaxed text-slate-700">${option.text}</span>`;button.addEventListener('click',()=>selectOption(i));container.appendChild(button)});
+      lucide.createIcons();
+    }
+    function selectOption(index){selectedOptionIndex=index;document.querySelectorAll('.choice-card').forEach((card,i)=>{card.classList.toggle('selected',i===index);const marker=card.querySelector('.choice-marker');marker.classList.toggle('bg-brand-600',i===index);marker.classList.toggle('text-white',i===index);marker.classList.toggle('border-brand-600',i===index);marker.classList.toggle('border-slate-300',i!==index);marker.classList.toggle('text-slate-500',i!==index);});const submit=$('btn-submit');submit.disabled=false;submit.className='w-full py-3.5 rounded-xl bg-brand-600 hover:bg-brand-700 text-white font-display font-bold text-base shadow-md transition-all active:scale-[.98] flex items-center justify-center gap-2'}
+    $('btn-start').addEventListener('click',()=>{resetScores();welcome.classList.add('hidden');game.classList.remove('hidden');currentScenarioIndex=0;loadScenario(0);window.scrollTo({top:0,behavior:'smooth'})});
     $('btn-submit').addEventListener('click',()=>{if(selectedOptionIndex===null)return;const data=researchData[currentScenarioIndex],choice=data.options[selectedOptionIndex];userScores[data.dimension]+=choice.score;$('selected-choice-display').textContent=choice.text;$('feedback-text').textContent=choice.feedback;$('feedback-panel').classList.remove('hidden');$('btn-submit').classList.add('hidden');document.querySelectorAll('.choice-card').forEach(c=>c.disabled=true);$('feedback-panel').scrollIntoView({behavior:'smooth',block:'nearest'});lucide.createIcons()});
     $('btn-continue').addEventListener('click',()=>{if(currentScenarioIndex<researchData.length-1){currentScenarioIndex++;loadScenario(currentScenarioIndex)}else{game.classList.add('hidden');results.classList.remove('hidden');renderResults()}window.scrollTo({top:0,behavior:'smooth'})});
     function renderResults(){$('results-dimension-list').innerHTML=researchData.map(s=>`<div class="flex items-center justify-between gap-4 p-3 rounded-lg bg-slate-50 border border-slate-100"><span class="text-sm font-semibold text-slate-700">${s.dimension}</span><span class="text-sm font-bold text-brand-700">${userScores[s.dimension]} / ${s.options.reduce((m,o)=>Math.max(m,o.score),0)}</span></div>`).join('');lucide.createIcons()}
-    $('btn-restart').addEventListener('click',()=>{currentScenarioIndex=0;results.classList.add('hidden');welcome.classList.remove('hidden');window.scrollTo({top:0,behavior:'smooth'})});
+    $('btn-restart').addEventListener('click',()=>{currentScenarioIndex=0;results.classList.add('hidden');welcome.classList.remove('hidden');$('feedback-panel').classList.add('hidden');$('btn-submit').classList.remove('hidden');window.scrollTo({top:0,behavior:'smooth'})});
     window.addEventListener('DOMContentLoaded',()=>lucide.createIcons());
   </script>
 </body>
